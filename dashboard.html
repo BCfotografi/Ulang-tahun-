@@ -1,0 +1,37 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Birthday Website Dashboard</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f5e8ec;color:#4b1025;font-family:system-ui}.wrap{max-width:850px;margin:auto;padding:20px}.card{background:#fff;border-radius:22px;padding:20px;margin:14px 0;box-shadow:0 8px 30px #5b102718}h1{margin-bottom:4px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:650px){.grid{grid-template-columns:1fr}}label{font-weight:800;font-size:13px;display:block;margin:12px 0 5px}input,textarea{width:100%;padding:12px;border:1px solid #e4c5cf;border-radius:12px;font:inherit}textarea{min-height:100px}button{border:0;border-radius:12px;padding:12px 16px;background:#69132e;color:#fff;font-weight:800;margin:5px 4px 5px 0}.muted{color:#7a5361;font-size:13px}.danger{background:#a52c4d}.files{border:2px dashed #dfbdc8;padding:15px;border-radius:15px}.reply{padding:12px;background:#fff5f7;border-radius:12px;margin:8px 0}.preview{width:100%;height:620px;border:0;border-radius:18px;background:#25050f}
+</style></head><body><div class="wrap">
+<h1>🎀 Birthday Website Dashboard</h1><div class="muted">Edit konten, ganti foto/video, dan lihat balasan. Perubahan tersimpan di browser ini.</div>
+<div class="card"><h2>⚙️ Identitas Website</h2><label>Nama website / judul browser</label><input id="siteTitle" value="19 & Fabulous"><label>Nama penerima default</label><input id="defaultName" placeholder="Contoh: Aulia"><button onclick="save()">💾 Simpan Pengaturan</button></div>
+<div class="card"><h2>💌 Kata-kata</h2><label>Ucapan utama</label><textarea id="message">Semoga di umur 19 ini, kamu ketemu lebih banyak alasan buat bahagia, lebih banyak orang yang tulus, dan lebih banyak momen manis.</textarea><label>19 harapan — satu per baris</label><textarea id="wishes">lebih banyak tawa
+rezeki yang lancar
+orang-orang yang tulus
+tidur yang cukup 😭
+mimpi yang jadi nyata
+hari tanpa overthinking
+cinta yang sehat
+petualangan baru
+percaya diri
+hati yang tenang
+kejutan-kejutan manis
+foto-foto bagus
+semangat saat lelah
+keberanian mencoba
+momen unforgettable
+kesehatan dan kebahagiaan
+plot twist yang baik
+alasan baru untuk bersyukur
+dan hidup yang selalu terasa seperti rumah 💗</textarea><button onclick="save()">💾 Simpan Kata-kata</button></div>
+<div class="card"><h2>📸 Media</h2><div class="muted">Untuk versi lokal, letakkan file dengan nama berikut di folder website.</div><div class="files"><b>foto-dia.jpg</b><br>memory1.jpg sampai memory5.jpg<br>memory6.mp4</div><p class="muted">Jika ingin mengganti, cukup timpa file dengan nama yang sama. Untuk hosting online, upload semua file ke folder yang sama.</p></div>
+<div class="card"><h2>💗 Balasan Pengunjung</h2><div id="replies"></div><button class="danger" onclick="clearReplies()">Hapus semua balasan di perangkat ini</button></div>
+<div class="card"><h2>🔗 Cara membuat link edit</h2><p class="muted">Dashboard ini adalah editor lokal. Untuk link online yang bisa dibuka dari mana saja, upload folder website ke hosting statis seperti GitHub Pages/Netlify/Vercel. Setelah itu, gunakan URL dashboard sebagai halaman admin sederhana. Untuk balasan lintas perangkat secara real-time, perlu database/backend (mis. Supabase/Firebase).</p><button onclick="downloadConfig()">⬇️ Download konfigurasi JSON</button></div>
+<div class="card"><h2>👀 Preview</h2><iframe class="preview" src="index.html"></iframe></div>
+</div><script>
+function save(){localStorage.setItem('birthday_config',JSON.stringify({title:siteTitle.value,defaultName:defaultName.value,message:message.value,wishes:wishes.value.split('\\n')}));alert('Tersimpan di browser ini 💗')}
+function load(){let c=JSON.parse(localStorage.getItem('birthday_config')||'null');if(c){siteTitle.value=c.title||'';defaultName.value=c.defaultName||'';message.value=c.message||'';wishes.value=(c.wishes||[]).join('\\n')}}
+function replies(){let out='';Object.keys(localStorage).filter(k=>k.startsWith('birthday_reply_')).sort().reverse().forEach(k=>{try{let x=JSON.parse(localStorage.getItem(k));out+=`<div class="reply"><b>${x.name}</b><br>${x.reply}<br><small>${x.time}</small></div>`}catch(e){}});document.getElementById('replies').innerHTML=out||'<span class="muted">Belum ada balasan.</span>'}
+function clearReplies(){if(confirm('Hapus semua balasan?')){Object.keys(localStorage).filter(k=>k.startsWith('birthday_reply_')).forEach(k=>localStorage.removeItem(k));replies()}}
+function downloadConfig(){let c=localStorage.getItem('birthday_config')||'{}',a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'application/json'}));a.download='birthday-config.json';a.click()}
+load();replies();
+</script></body></html>
